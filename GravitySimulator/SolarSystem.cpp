@@ -43,8 +43,8 @@ void SolarSystem::createSun(){
  * This function will take the info from the parser and pass it into corresponding
  * map that has been passed through
  *
- * @holder : map passed in where parser info will be stored
- * @type : the type name we are looking for in the parser
+ * @param holder : map passed in where parser info will be stored
+ * @param type : the type name we are looking for in the parser
  */
 void SolarSystem::assignObjects(map<string, Planet> holder, string type){
 	for(SpaceObject object : spaceObjects){

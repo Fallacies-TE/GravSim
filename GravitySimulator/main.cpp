@@ -17,9 +17,6 @@ SpaceObject spaceObjectBuffer; //used to buffer each space object.
 vector<Planet> spaceObjectVectorBuffer;//
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 
-double tempDouble;
-int tempInt;
-
 int main()
 {
     int inputType = NAME;

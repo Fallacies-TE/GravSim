@@ -1,3 +1,8 @@
+/*
+ author: Chenjun Li
+ 4/17/2014
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -45,7 +50,7 @@ Ex: earth 1.0  1.0  1.0  100.0  2.0  2.0  2.0  10.0  12 32 24  planet
                 inputType = X;
                 break;
             case X:
-                spaceObjectBuffer.set_x(atof(info.c_str()));
+                spaceObjectBuffer.set_x(atof(info.c_str()));//convert string to char[] then to double
                 inputType = Y;
                 break;
             case Y:
@@ -107,7 +112,7 @@ Now read it in to construct SolarSystem object.
 
     physics(mySolarSystem);
 
-//OpenGL part
+//to do OpenGL part below
 
     return 0;
 }

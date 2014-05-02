@@ -53,6 +53,9 @@ static vector<SpaceObject> spaceObjectVector;
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 Physics *phy;
 float xxx = 5e8;
+static float viewX = 0.0;
+static float viewY = 0.0;
+static float viewZ = -300.0;
 
 void readin(void)
 {
@@ -152,7 +155,7 @@ void systemDisplay(){
     gluPerspective(90, 1280.0f/720, 1, 300);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0.0, 0.0, -300, 0.0, 0.0, 10.0, 0.0, 1.0, 0.0);
+    gluLookAt(viewX, viewY, viewZ, 0.0, 0.0, 10.0, 0.0, 1.0, 0.0);
 
     //light
     //only suns will have light
@@ -219,6 +222,84 @@ void myIdle(void)
     systemDisplay();
 }
 
+static void key(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case 27 :
+        case 'q':
+            exit(0);
+            break;
+
+        case 'd':
+            if(viewZ != 0.0)
+            {
+                viewX = -viewZ;
+                viewZ = 0.0;
+            }
+            else
+            {
+                viewZ = viewX;
+                viewX = 0.0;
+            }
+            break;
+
+        case 'a':
+            if(viewZ != 0.0)
+            {
+                viewX = viewZ;
+                viewZ = 0.0;
+            }
+            else
+            {
+                viewZ = -viewX;
+                viewX = 0.0;
+            }
+            break;
+        case 'w':
+            if(viewX > 1.0)
+            {
+                viewX = viewX - 1.0;
+            }
+            else if(viewX < -1.0)
+            {
+                viewX = viewX + 1.0;
+            }
+            else if(viewZ > 1.0)
+            {
+                viewZ = viewZ - 1.0;
+            }
+            else if(viewZ < -1.0)
+            {
+                viewZ = viewZ + 1.0;
+            }
+            break;
+        case 's':
+            if(viewY <= 20.0)
+            {
+                viewY = viewY + 1.0;
+                if(viewX > 0.0)
+                {
+                    viewX = viewX + 2.0;
+                }
+                else if(viewX < 0.0)
+                {
+                    viewX = viewX - 2.0;
+                }
+                else if(viewZ > 0.0)
+                {
+                    viewZ = viewZ + 2.0;
+                }
+                else
+                {
+                    viewZ = viewZ - 2.0;
+                }
+            }
+            break;
+    }
+    systemDisplay();
+}
+
 int main(int argc, char *argv[])
 {
     readin();
@@ -230,6 +311,7 @@ int main(int argc, char *argv[])
     glutCreateWindow("The first OpenGl project");
     glutDisplayFunc(&systemDisplay);
     glutIdleFunc(&myIdle);
+    glutKeyboardFunc(&key);
     glutMainLoop();
     return 0;
 }

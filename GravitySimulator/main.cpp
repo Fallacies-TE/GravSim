@@ -277,11 +277,13 @@ static void key(unsigned char key, int x, int y)
             }
             break;
         case 's':
+
             if(viewX >= 1.0 && viewX < 1000.0) {
                 viewX += 1.0;
             }
             else if (viewX <= -1.0 && viewX > -1000.0) {
                 viewX -= 1.0;
+
             }
             else if (viewZ >= 1.0 && viewZ < 1000.0){
                 viewZ += 1.0;

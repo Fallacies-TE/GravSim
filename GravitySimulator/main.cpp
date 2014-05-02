@@ -34,7 +34,6 @@
   * implemented physics part
   * don't forget download test03.txt for testing SUN-EARTH-MOON system!
   */
-#include <windows.h>
 #include <GL/glut.h>
 #include <vector>
 #include <iostream>
@@ -43,6 +42,7 @@
 #include <stdlib.h>
 #include "SpaceObject.h"
 #include "Physics.h"
+
 
 using namespace std;
 void readin(void);
@@ -197,10 +197,12 @@ void systemDisplay(){
         }
 
         glTranslatef(spaceObjectVector[i]._x/xxx, spaceObjectVector[i]._y/xxx, spaceObjectVector[i]._z/xxx);
-        if(spaceObjectVector[i]._radius/xxx>0.5f){
-            glutSolidSphere(spaceObjectVector[i]._radius/xxx, 16, 16);
-        }else{
-            glutSolidSphere(0.5f, 8, 8);
+        if(spaceObjectVector[i]._type == "Star"){
+            glutSolidSphere(50*spaceObjectVector[i]._radius/xxx, 16, 16);
+        }else if (spaceObjectVector[i]._type == "Planet") {
+            glutSolidSphere(500 * spaceObjectVector[i]._radius/xxx, 8, 8);
+        } else if (spaceObjectVector[i]._type == "Satellite"){
+            glutSolidSphere(500 * spaceObjectVector[i]._radius/xxx, 8, 8);
         }
         glTranslatef(-spaceObjectVector[i]._x/xxx, -spaceObjectVector[i]._y/xxx, -spaceObjectVector[i]._z/xxx);
     }

@@ -24,5 +24,6 @@ Physics.o:  Physics.h Physics.cpp
 	$(CC) -c Physics.cpp
 
 clean:
-	rm *.o *~ prog
+	rm *.o  gravSim
+
   

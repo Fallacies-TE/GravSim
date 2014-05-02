@@ -56,6 +56,8 @@ float xxx = 5e8;
 static float viewX = 0.0;
 static float viewY = 0.0;
 static float viewZ = -300.0;
+static int speed = 360;
+
 
 void readin(void)
 {
@@ -152,7 +154,7 @@ void systemDisplay(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(90, 1280.0f/720, 1, 300);
+    gluPerspective(120, 1280.0f/720, 1, 1000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(viewX, viewY, viewZ, 0.0, 0.0, 10.0, 0.0, 1.0, 0.0);
@@ -203,7 +205,7 @@ void systemDisplay(){
         if(spaceObjectVector[i]._type == "Star"){
             glutSolidSphere(50*spaceObjectVector[i]._radius/xxx, 16, 16);
         }else if (spaceObjectVector[i]._type == "Planet") {
-            glutSolidSphere(500 * spaceObjectVector[i]._radius/xxx, 8, 8);
+            glutSolidSphere(1000 * spaceObjectVector[i]._radius/xxx, 8, 8);
         } else if (spaceObjectVector[i]._type == "Satellite"){
             glutSolidSphere(500 * spaceObjectVector[i]._radius/xxx, 8, 8);
         }
@@ -216,7 +218,7 @@ void systemDisplay(){
 
 void myIdle(void)
 {
-    for(int t=0;t<360;t++)
+    for(int t=0;t< speed;t++)
         phy->step();
     spaceObjectVector = phy->currentStep;
     systemDisplay();
@@ -275,27 +277,36 @@ static void key(unsigned char key, int x, int y)
             }
             break;
         case 's':
-            if(viewY <= 20.0)
-            {
-                viewY = viewY + 1.0;
-                if(viewX > 0.0)
-                {
-                    viewX = viewX + 2.0;
-                }
-                else if(viewX < 0.0)
-                {
-                    viewX = viewX - 2.0;
-                }
-                else if(viewZ > 0.0)
-                {
-                    viewZ = viewZ + 2.0;
-                }
-                else
-                {
-                    viewZ = viewZ - 2.0;
-                }
+            if(viewX >= 1.0 && viewX < 1000.0) {
+                viewX += 1.0;
             }
+            else if (viewX <= -1.0 && viewX > -1000.0) {
+                viewX -= 1.0;
+            }
+            else if (viewZ >= 1.0 && viewZ < 1000.0){
+                viewZ += 1.0;
+            }
+            else if (viewZ <= -1.0 && viewZ > -1000.0){
+                viewZ -= 1.0;
+            }
+            
             break;
+        case ',':
+            if (speed <= 360){
+                break;
+            }
+            else {
+                speed /= 2;
+                break; 
+            }
+        case '.':
+            if (speed >= 46080) {
+                break;
+            } else {
+                speed *= 2;
+                break;
+            }
+
     }
     systemDisplay();
 }

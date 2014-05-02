@@ -275,25 +275,21 @@ static void key(unsigned char key, int x, int y)
             }
             break;
         case 's':
-            if(viewY <= 20.0)
+            if(viewX >= 1.0 && viewX <300.0)
             {
-                viewY = viewY + 1.0;
-                if(viewX > 0.0)
-                {
-                    viewX = viewX + 2.0;
-                }
-                else if(viewX < 0.0)
-                {
-                    viewX = viewX - 2.0;
-                }
-                else if(viewZ > 0.0)
-                {
-                    viewZ = viewZ + 2.0;
-                }
-                else
-                {
-                    viewZ = viewZ - 2.0;
-                }
+                viewX = viewX + 1.0;
+            }
+            else if(viewX <= -1.0 && viewX > -300.0 )
+            {
+                viewX = viewX - 1.0;
+            }
+            else if(viewZ >= 1.0 && viewZ < 300.0)
+            {
+                viewZ = viewZ + 1.0;
+            }
+            else if(viewZ <= -1.0 && viewZ > -300.0)
+            {
+                viewZ = viewZ - 1.0;
             }
             break;
     }

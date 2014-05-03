@@ -33,6 +33,24 @@
  /* Modified by Tianyu Kang
   * implemented physics part
   * don't forget download test03.txt for testing SUN-EARTH-MOON system!
+  *
+  * Modified by David Argueta
+  * implemented Solar System part - the space objects are stored in this system
+  * and are assigned to stars, planets, or moons.
+  *
+  * The planets will also have reference to their moons.
+  * This could possibly make the physics easier if you need to assign the
+  * moon orbits to their planet and then the planet to the sun.
+  * The physics would probably need to be adjusted in order to take
+  * in a solar system. Right now it still works as before.
+  * I also have the solar system keep reference to the sun, but not quite
+  * sure it will be needed since I also have it as part of the stars.
+  *
+  * I condensed the code in order to loop through necessary times
+  * for each object and added setColor for code reuse
+  * I also updated the moon name in test03.txt in order to specify what planet it belongs to:
+  * 	EarthMoon1
+  *
   */
 #include <GL/glut.h>
 #include <vector>
@@ -42,14 +60,17 @@
 #include <stdlib.h>
 #include "SpaceObject.h"
 #include "Physics.h"
+#include "SolarSystem.h"
 
 
 using namespace std;
 void readin(void);
 void myDisplay(void);
+void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[], float eMultiplier, SpaceObject spaceObject);
 
 SpaceObject spaceObjectBuffer;
 static vector<SpaceObject> spaceObjectVector;
+static SolarSystem ss;
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 Physics *phy;
 float xxx = 5e8;
@@ -131,6 +152,8 @@ void readin(void)
             }
         }
     }
+    ss.update(spaceObjectVector);
+
 }
 
 void addLight(float x,float y,float z,int _lightNum){
@@ -163,11 +186,10 @@ void systemDisplay(){
     //only suns will have light
 
     int lightNum =0;
-    for(int i=0; i < spaceObjectVector.size(); i++){
-        if(spaceObjectVector[i]._type=="Star"){
-            addLight(spaceObjectVector[i]._x, spaceObjectVector[i]._y, spaceObjectVector[i]._z,lightNum++);
-        }
+    for(int i=0; i < ss.getStars().size(); i++){
+    	addLight(ss.getStars().at(i)._x, ss.getStars().at(i)._y, ss.getStars().at(i)._z,lightNum++);
     }
+
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
 
@@ -178,49 +200,57 @@ void systemDisplay(){
     surfaceColor[3]=1.0f;
     emissionColor[3]=1.0f;
     specularColor[3]=1.0f;
-    for(int i=0; i < spaceObjectVector.size(); i++){
-        surfaceColor[0] =spaceObjectVector[i]._red/2;
-        surfaceColor[1] =spaceObjectVector[i]._green/2;
-        surfaceColor[2] =spaceObjectVector[i]._blue/2;
-        specularColor[0] =spaceObjectVector[i]._red;
-        specularColor[1] =spaceObjectVector[i]._green;
-        specularColor[2] =spaceObjectVector[i]._blue;
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, surfaceColor);
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 3.0f);
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularColor);
 
-        if(spaceObjectVector[i]._type=="Star"){
-            emissionColor[0] =spaceObjectVector[i]._red;
-            emissionColor[1] =spaceObjectVector[i]._green;
-            emissionColor[2] =spaceObjectVector[i]._blue;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
-        }else{
-            emissionColor[0] =spaceObjectVector[i]._red*0.03f;
-            emissionColor[1] =spaceObjectVector[i]._green*0.03f;
-            emissionColor[2] =spaceObjectVector[i]._blue*0.03f;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
-        }
+    for(int i=0; i < ss.getPlanets().size(); i++){
+        setColors(surfaceColor, specularColor, emissionColor, 0.03f,ss.getPlanets()[i].getSpaceObject());
 
-        glTranslatef(spaceObjectVector[i]._x/xxx, spaceObjectVector[i]._y/xxx, spaceObjectVector[i]._z/xxx);
-        if(spaceObjectVector[i]._type == "Star"){
-            glutSolidSphere(50*spaceObjectVector[i]._radius/xxx, 16, 16);
-        }else if (spaceObjectVector[i]._type == "Planet") {
-            glutSolidSphere(1000 * spaceObjectVector[i]._radius/xxx, 8, 8);
-        } else if (spaceObjectVector[i]._type == "Satellite"){
-            glutSolidSphere(500 * spaceObjectVector[i]._radius/xxx, 8, 8);
+        glutSolidSphere(1000 * ss.getPlanets()[i].getSpaceObject()._radius/xxx, 8, 8);
+        glTranslatef(-ss.getPlanets()[i].getSpaceObject()._x/xxx, -ss.getPlanets()[i].getSpaceObject()._y/xxx, -ss.getPlanets()[i].getSpaceObject()._z/xxx);
+
+        if(ss.getPlanets()[i].hasMoon()){
+        	for(int j = 0; j < ss.getPlanets()[i].getMoons().size(); j++){
+        		setColors(surfaceColor, specularColor, emissionColor, 0.03f,ss.getPlanets()[j].getMoons()[j]);
+
+        		glutSolidSphere(500 * ss.getPlanets()[j].getMoons()[j]._radius/xxx, 8, 8);
+        		glTranslatef(-ss.getPlanets()[j].getMoons()[j]._x/xxx, -ss.getPlanets()[j].getMoons()[j]._y/xxx, -ss.getPlanets()[j].getMoons()[j]._z/xxx);
+        	}
         }
-        glTranslatef(-spaceObjectVector[i]._x/xxx, -spaceObjectVector[i]._y/xxx, -spaceObjectVector[i]._z/xxx);
+    }
+    for(int i=0; i < ss.getStars().size(); i++){
+    	setColors(surfaceColor, specularColor, emissionColor, 1.0f, ss.getStars()[i]);
+
+    	glutSolidSphere(50*ss.getStars()[i]._radius/xxx, 16, 16);
+    	glTranslatef(-ss.getStars()[i]._x/xxx, -ss.getStars()[i]._y/xxx, -ss.getStars()[i]._z/xxx);
     }
 
     glFlush();
     glutSwapBuffers();
 }
 
+void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[], float eMultiplier, SpaceObject spaceObject){
+	surfaceColor[0] =spaceObject._red/2;
+	surfaceColor[1] =spaceObject._green/2;
+	surfaceColor[2] =spaceObject._blue/2;
+	specularColor[0] =spaceObject._red;
+	specularColor[1] =spaceObject._green;
+	specularColor[2] =spaceObject._blue;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, surfaceColor);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 3.0f);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularColor);
+
+	emissionColor[0] =spaceObject._red*eMultiplier;
+	emissionColor[1] =spaceObject._green*eMultiplier;
+	emissionColor[2] =spaceObject._blue*eMultiplier;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
+
+	glTranslatef(spaceObject._x/xxx, spaceObject._y/xxx, spaceObject._z/xxx);
+}
+
 void myIdle(void)
 {
     for(int t=0;t< speed;t++)
         phy->step();
-    spaceObjectVector = phy->currentStep;
+    ss.update(phy->currentStep);
     systemDisplay();
 }
 
@@ -316,7 +346,7 @@ static void key(unsigned char key, int x, int y)
 int main(int argc, char *argv[])
 {
     readin();
-    phy = new Physics(spaceObjectVector,1);
+    phy = new Physics(ss.getEntireSystem(),1);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE);
     glutInitWindowPosition(0,0);

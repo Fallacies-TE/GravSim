@@ -14,11 +14,18 @@
 
 #include "SolarSystem.h"
 
+SolarSystem::SolarSystem(){
 
-SolarSystem::SolarSystem(vector<SpaceObject> spaceObjects) {
+}
 
-	this->spaceObjects.swap(spaceObjects);
-	assignObjects(planets, "planet");
+/**
+ * Constructor that will add the space objects to the system
+ * and will also assign them to their respective groups
+ */
+SolarSystem::SolarSystem(vector<SpaceObject> &spaceObjects) {
+
+	this->spaceObjects = spaceObjects;
+	assignObjects();
 	assignMoons();
 
 }
@@ -27,52 +34,95 @@ SolarSystem::~SolarSystem() {
 	// TODO Auto-generated destructor stub
 }
 
-vector<SpaceObject> SolarSystem::getPlanets(){
-	//TODO
-	return planets;
-}
-
 /**
- * Will create the sun for this solar system
+ * Function that will update the system with the given space objects
  */
-void SolarSystem::createSun(){
-	//TODO
+void SolarSystem::update(vector<SpaceObject> &spaceObjects){
+	this->spaceObjects = spaceObjects;
+	assignObjects();
+	assignMoons();
 }
 
 /**
- * This function will take the info from the parser and pass it into corresponding
- * map that has been passed through
+ * Function that will return the vector of planets in this system
+ */
+vector<Planet> &SolarSystem::getPlanets(){
+	//TODO
+	return planetVector;
+}
+
+/**
+ * Will return the sun for this solar system
+ */
+SpaceObject SolarSystem::getSun(){
+	return sun;
+}
+
+/**
+ * Will return the stars of this solar system.
+ */
+vector<SpaceObject> &SolarSystem::getStars(){
+	return stars;
+}
+
+/**
+ * Will return a vector of all the space objects in this system.
+ */
+vector<SpaceObject> &SolarSystem::getEntireSystem(){
+	return spaceObjects;
+}
+
+/**
+ * Helper function that will go through space objects and add them to appropriate list
+ * of either planets, moons, or stars based on the objects type
  *
- * @param holder : map passed in where parser info will be stored
- * @param type : the type name we are looking for in the parser
  */
-void SolarSystem::assignObjects(map<string, Planet> holder, string type){
-	for(SpaceObject object : spaceObjects){
-		if(object.type() == type)
-			holder.insert( pair<string, Planet>(object.type(),object));
+void SolarSystem::assignObjects(){
+	planets.clear();
+	moons.clear();
+	stars.clear();
+	for(std::vector<SpaceObject>::iterator object = spaceObjects.begin(); object != spaceObjects.end(); ++object){
+
+		if(object->_type == PLANET_TEXT)
+			planets.insert( pair<string, Planet>(object->_planetName,Planet(*object)));
+
+		if(object->_type == MOON_TEXT)
+			moons.push_back(*object);
+
+		if(object->_type == STAR_TEXT && object->_planetName == SUN_TEXT)
+			sun = *object;
+
+		if(object->_type == STAR_TEXT )
+			stars.push_back(*object);
+
 
 	}
+
+
 }
 
 /**
  * This will look through the parser results and match moons to their corresponding
- * planet.
+ * planet. It will also add the planets to the planet vector with the updated moon info.
  */
 void SolarSystem::assignMoons(){
-	string planet;
+	string planet("");
 	map<string, Planet>::iterator found;
 
-	for(SpaceObject moon : spaceObjects){
-			if(moon.type().find(MOONTEXT) != string::npos){ // Found type that contains moon specifier
-				planet(moon.type().substr(0, moon.type().size()-MOONTEXT.size())); //Taking the planet name it belongs to
-				found = planets.find(planet);
-				if(found == planets.end())
-					cout << "not found";
-				else
-					found->second.addMoon(moon); // Adding moon to planet
-			}
-
-
+	for(std::vector<SpaceObject>::iterator moon = moons.begin(); moon != moons.end(); ++moon){
+		planet.append(moon->_planetName.substr(0, moon->_planetName.size()- MOON_GAP));
+		found = planets.find(planet);
+		if(found == planets.end()){
+			cerr << "not found: " << planet << endl;
 		}
+		else
+			found->second.addMoon(*moon); // Adding moon to planet
+	}
+
+	planetVector.clear();
+	for(std::map<string, Planet>::iterator planet = planets.begin(); planet != planets.end(); ++planet){
+		planetVector.push_back(planet->second);
+
+	}
 }
 

@@ -4,7 +4,7 @@
 # directory
 ############################################################################### 
 # the objects are our main, physics, and spaceobject libraries
-OBJS =  main.o Physics.o SpaceObject.o
+OBJS =  main.o Physics.o SpaceObject.o SolarSystem.o Planet.o
 # adding in the open gl and glut options
 LIBS =  -lGLU -lGL -lglut
 # using the g++ compiler
@@ -22,6 +22,12 @@ SpaceObject.o: SpaceObject.h SpaceObject.cpp
 
 Physics.o:  Physics.h Physics.cpp 
 	$(CC) -c Physics.cpp
+
+SolarSystem.o: SolarSystem.h SolarSystem.cpp SpaceObject.h Planet.h
+	$(CC) -c SolarSystem.cpp
+
+Planet.o: Planet.h Planet.cpp SpaceObject.h
+	$(CC) -c Planet.cpp
 
 clean:
 	rm *.o  gravSim

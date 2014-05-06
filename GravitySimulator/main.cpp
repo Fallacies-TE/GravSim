@@ -13,7 +13,7 @@
  *
  * Tip 2: Please install glut.
  *
- *
+ *----------------Out Of Date ------------------------------------
  * This is just sample version, it runs, but not follows the
  * gravity. It can only include sun, earth and moon.
  *
@@ -28,6 +28,7 @@
  * Need to do: I need a physics() function. Which can change
  * the current position(x,y,z) after one day(a unit in program).
  * The physics() function will be used in the myIdle() function.
+ *-------------------------------------------------------------------
  */
 
  /* Modified by Tianyu Kang
@@ -52,7 +53,26 @@
   * 	EarthMoon1
   *
   */
+
+ /* Timothy Esau Notes
+  * First added #include <glm/glm.hpp>
+  *    this is a header file for OpenGl Mathematics and is mostly used for matrix math
+  *    involving the camera position.
+  *    use    sudo apt-get install libglm-dev
+  *
+  * CalcualteLookAt
+
+
+
+
+
+
+  */
+#define GLM_FORCE_RADIANS
 #include <GL/glut.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -66,6 +86,10 @@
 using namespace std;
 void readin(void);
 void myDisplay(void);
+float DegToRad(float degree);
+glm::vec3 ResolveCamPosition(void);
+glm::mat4 CalculateLookAt(const glm::vec3 &cameraPoint, const glm::vec3 &lookPoint, const glm::vec3 &upPoint);
+
 void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[], float eMultiplier, SpaceObject spaceObject);
 
 SpaceObject spaceObjectBuffer;
@@ -78,6 +102,9 @@ static float viewX = 0.0;
 static float viewY = 0.0;
 static float viewZ = -300.0;
 static int speed = 360;
+static glm::vec3 _cameraTarget(0.0f, 0.4f, 0.0f);
+static glm::vec3 _sphereCameraPos(67.5f, -46.0f, 150.0f);
+
 
 
 void readin(void)
@@ -175,13 +202,15 @@ void systemDisplay(){
 
     //glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    const glm::vec3 &camPos = ResolveCamPosition();
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(120, 1280.0f/720, 1, 1000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(viewX, viewY, viewZ, 0.0, 0.0, 10.0, 0.0, 1.0, 0.0);
-
+    gluLookAt(camPos.x, camPos.y, camPos.z, _cameraTarget.x, _cameraTarget.y, _cameraTarget.z, 0.0, 1.0, 0.0);
     //light
     //only suns will have light
 
@@ -254,6 +283,53 @@ void myIdle(void)
     systemDisplay();
 }
 
+glm::mat4 CalculateLookAt(const glm::vec3 &cameraPoint, const glm::vec3 &lookPoint, const glm::vec3 &upPoint)
+{
+    // Calculate the vector we are looking at, and the vector that is up for us
+    glm::vec3 lookDirection = glm::normalize(lookPoint - cameraPoint);
+    glm::vec3 upDirection = glm::normalize(upPoint);
+
+    // from our newly calculated vectors, find the vector pointing right, and the perpidicular
+    // vector to our up vector
+    glm::vec3 rightDirection = glm::normalize(glm::cross(lookDirection, upDirection));
+    glm::vec3 perpUpDirection = glm::cross(rightDirection, lookDirection);
+
+    // This is where we create the rotation matrix from the calculated vectors
+    glm::mat4 rotateMat(1.0f);
+    rotateMat[0] = glm::vec4(rightDirection, 0.0f);
+    rotateMat[1] = glm::vec4(perpUpDirection, 0.0f);
+    rotateMat[2] = glm::vec4(-lookDirection, 0.0f);
+
+    rotateMat = glm::transpose(rotateMat);
+    
+    // calculate the translation of the camera
+    glm::mat4 translateMat(1.0f);
+    translateMat[3] = glm::vec4(-cameraPoint, 1.0f);
+
+    // multiply the rotation matrix on the right by the translation matrix for our new perspective
+    return rotateMat * translateMat;
+}
+
+glm::vec3 ResolveCamPosition()
+{
+    
+
+    float phi = DegToRad(_sphereCameraPos.x);
+    float theta = DegToRad(_sphereCameraPos.y + 90.0f);
+
+    float sinTheta = sinf(theta);
+    float cosTheta = cosf(theta);
+    float cosPhi = cosf(phi);
+    float sinPhi = sinf(phi);
+
+    glm::vec3 directionToCamera(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
+    return (directionToCamera * _sphereCameraPos.z) + _cameraTarget;
+}
+
+float DegToRad(float degree) {
+    return degree * (3.14159265 / 180);
+}
+
 static void key(unsigned char key, int x, int y)
 {
     switch (key)
@@ -264,65 +340,46 @@ static void key(unsigned char key, int x, int y)
             break;
 
         case 'd':
-            if(viewZ != 0.0)
-            {
-                viewX = -viewZ;
-                viewZ = 0.0;
-            }
-            else
-            {
-                viewZ = viewX;
-                viewX = 0.0;
-            }
+            _cameraTarget.x += 4.0f;
             break;
-
         case 'a':
-            if(viewZ != 0.0)
-            {
-                viewX = viewZ;
-                viewZ = 0.0;
-            }
-            else
-            {
-                viewZ = -viewX;
-                viewX = 0.0;
-            }
+            _cameraTarget.x -= 4.0f;
             break;
         case 'w':
-            if(viewX > 1.0)
-            {
-                viewX = viewX - 1.0;
-            }
-            else if(viewX < -1.0)
-            {
-                viewX = viewX + 1.0;
-            }
-            else if(viewZ > 1.0)
-            {
-                viewZ = viewZ - 1.0;
-            }
-            else if(viewZ < -1.0)
-            {
-                viewZ = viewZ + 1.0;
-            }
+            _cameraTarget.z -= 4.0f;
             break;
         case 's':
-
-            if(viewX >= 1.0 && viewX < 1000.0) {
-                viewX += 1.0;
-            }
-            else if (viewX <= -1.0 && viewX > -1000.0) {
-                viewX -= 1.0;
-
-            }
-            else if (viewZ >= 1.0 && viewZ < 1000.0){
-                viewZ += 1.0;
-            }
-            else if (viewZ <= -1.0 && viewZ > -1000.0){
-                viewZ -= 1.0;
-            }
-            
+	    _cameraTarget.z += 4.0f;
             break;
+	case ' ':
+	    _cameraTarget.y += 4.0f;
+	    break;
+	case 'z':
+	    _cameraTarget.y -= 4.0f;
+	    break;
+
+
+        //
+	case 't':
+            _sphereCameraPos.z += 5.0f;
+            break;
+        case 'g':
+            _sphereCameraPos.z -= 5.0f;
+            break;
+        case 'f':
+            _sphereCameraPos.x += 4.f;
+            break;
+        case 'h':
+	    _sphereCameraPos.x -= 4.0f;
+            break;
+	case 'i':
+	    _sphereCameraPos.y -= 11.0f;
+	    break;
+	case 'k':
+	    _sphereCameraPos.y += 11.0f;
+	    break;
+	//
+	    
         case ',':
             if (speed <= 360){
                 break;
@@ -340,6 +397,12 @@ static void key(unsigned char key, int x, int y)
             }
 
     }
+    
+    _sphereCameraPos.y = glm::clamp(_sphereCameraPos.y, -78.75f, -1.0f);
+    _cameraTarget.y = _cameraTarget.y > 0.0f ? _cameraTarget.y : 0.0f;
+    _sphereCameraPos.z = _sphereCameraPos.z > 5.0f ? _sphereCameraPos.z : 5.0f;
+
+
     systemDisplay();
 }
 
@@ -351,7 +414,7 @@ int main(int argc, char *argv[])
     glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE);
     glutInitWindowPosition(0,0);
     glutInitWindowSize(1280,720);
-    glutCreateWindow("The first OpenGl project");
+    glutCreateWindow("Gravity Simulation");
     glutDisplayFunc(&systemDisplay);
     glutIdleFunc(&myIdle);
     glutKeyboardFunc(&key);

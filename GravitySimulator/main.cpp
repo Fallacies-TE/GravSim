@@ -257,6 +257,7 @@ void systemDisplay(){
 }
 
 void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[], float eMultiplier, SpaceObject spaceObject){
+    //cout << "Does this shit break here?";
 	surfaceColor[0] =spaceObject._red/2;
 	surfaceColor[1] =spaceObject._green/2;
 	surfaceColor[2] =spaceObject._blue/2;
@@ -273,6 +274,7 @@ void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emission
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
 
 	glTranslatef(spaceObject._x/xxx, spaceObject._y/xxx, spaceObject._z/xxx);
+    //cout << "nope";
 }
 
 void myIdle(void)

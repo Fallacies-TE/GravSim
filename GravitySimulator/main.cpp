@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
     readin();
     phy = new Physics(ss.getEntireSystem(),1);
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE);
+    glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowPosition(0,0);
     glutInitWindowSize(1280,720);
     glutCreateWindow("Gravity Simulation");

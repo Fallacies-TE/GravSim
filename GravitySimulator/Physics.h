@@ -20,7 +20,7 @@ class Physics
         Physics(std::vector<SpaceObject> data,long interval);
         void step();
     private:
-        void calc(SpaceObject *p1,SpaceObject *p2,SpaceObject *np1,SpaceObject *np2);
+        bool calc(SpaceObject *p1,SpaceObject *p2,SpaceObject *np1,SpaceObject *np2);
 };
 
 #endif // physics_h

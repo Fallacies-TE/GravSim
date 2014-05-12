@@ -116,7 +116,7 @@ bool Physics::calc(SpaceObject *p1,SpaceObject *p2,SpaceObject *np1,SpaceObject 
     // and return true
     // else
     // we return false so the step function knows to implement the collision    
-	if (distance > p1->radius + p->radius){
+	if (distance > p1->_radius + p2->_radius){
 	    return true;
 	} else {
 		return false;

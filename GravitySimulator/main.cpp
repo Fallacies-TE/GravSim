@@ -81,7 +81,7 @@
 #include "SpaceObject.h"
 #include "Physics.h"
 #include "SolarSystem.h"
-
+#include "Ship.h"
 
 using namespace std;
 void readin(void);
@@ -95,6 +95,7 @@ void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emission
 SpaceObject spaceObjectBuffer;
 static vector<SpaceObject> spaceObjectVector;
 static SolarSystem ss;
+Ship ship;
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 Physics *phy;
 float xxx = 5e8;
@@ -252,6 +253,7 @@ void systemDisplay(){
     	glTranslatef(-ss.getStars()[i]._x/xxx, -ss.getStars()[i]._y/xxx, -ss.getStars()[i]._z/xxx);
     }
 
+    ship.renderWindow();
     glFlush();
     glutSwapBuffers();
 }

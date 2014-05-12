@@ -19,6 +19,7 @@ Physics::Physics(std::vector<SpaceObject> data,long interval){
         currentStep = data;
         nextStep = data;
         this->interval = interval;
+        xxxx  = 5e8;
     }
 
 void Physics::step(){
@@ -32,6 +33,16 @@ void Physics::step(){
             not_crashing = calc(&currentStep[i],&currentStep[j],
                 &nextStep[i],&nextStep[j]);
             if (!not_crashing){
+            	currentStep[j]._mass += currentStep[i]._mass;
+            	currentStep[j]._x_speed += currentStep[i]._x_speed;
+            	currentStep[j]._y_speed += currentStep[i]._y_speed;
+            	currentStep[j]._z_speed += currentStep[i]._z_speed;
+            	currentStep[j]._radius += currentStep[i]._radius;
+
+            	currentStep.erase(currentStep.begin());
+            	nextStep.erase(nextStep.begin() + j);
+            	
+
             	// erase currentStep[i] and nextStep[i]
             	// currentStep[j] and nextStep[j] become a conglomerate of the two
             	// add mass together, add each vector together.
@@ -116,7 +127,7 @@ bool Physics::calc(SpaceObject *p1,SpaceObject *p2,SpaceObject *np1,SpaceObject 
     // and return true
     // else
     // we return false so the step function knows to implement the collision    
-	if (distance > p1->_radius + p2->_radius){
+	if (distance > (1000 * p1->_radius/xxxx) + (1000*p2->_radius/xxxx)  ){
 	    return true;
 	} else {
 		return false;

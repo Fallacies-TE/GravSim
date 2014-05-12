@@ -12,6 +12,7 @@
 class Physics
 {
     public:
+    	float xxxx;
         double G;
         std::vector<SpaceObject> currentStep;
         std::vector<SpaceObject> nextStep;

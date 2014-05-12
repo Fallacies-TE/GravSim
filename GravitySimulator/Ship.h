@@ -9,6 +9,7 @@
 #define SHIP_H_
 
 #include <GL/gl.h>
+#include <GL/glu.h>
 
 class Ship {
 	class Vector {
@@ -41,11 +42,11 @@ class Ship {
 		Vector point[4];
 
 	};
-	class Rectangle {
+	class Shape {
 	public:
-		Rectangle();
-		Rectangle(Side front, Side right, Side left, Side back, Side top, Side bottom);
-		virtual ~Rectangle();
+		Shape();
+		Shape(Side front, Side right, Side left, Side back, Side top, Side bottom);
+		virtual ~Shape();
 		Side getFront();
 		Side getRight();
 		Side getLeft();
@@ -63,17 +64,35 @@ public:
 	Ship();
 	virtual ~Ship();
 	float size();
-	Rectangle getBody();
+	Shape getBody();
+	void renderWindow();
 
 private:
 	enum Position {TOPLEFT=0, BOTTOMLEFT, TOPRIGHT, BOTTOMRIGHT};
-	Rectangle wings[];
-	Rectangle *body;
-	Rectangle nose;
-	Rectangle thrusters[];
-	Rectangle blasters[];
+	Shape wings[];
+	Shape *body;
+	Shape nose;
+	Shape thrusters[];
+	Shape blasters[];
+	Side frontPanel;
+	Side mediumScreenTop;
+	Side mediumScreenFront;
+	Side mediumScreenRight;
+	Side largeScreenTop;
+	Side largeScreenFront;
+	Side largeScreenLeft;
+	Side supportBeams[2];
+	Side topSidePanel[2];
+	Side insideSidePanel[2];
+
 	void createShip();
 	void createBody();
+	void createWindow();
+	void createScreens();
+	void createMediumScreen();
+	void createLargeScreen();
+	void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[],
+			float eMultiplier, double r, double g, double b);
 };
 
 #endif /* SHIP_H_ */

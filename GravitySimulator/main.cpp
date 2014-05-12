@@ -81,7 +81,7 @@
 #include "SpaceObject.h"
 #include "Physics.h"
 #include "SolarSystem.h"
-
+#include "Ship.h"
 
 using namespace std;
 void readin(void);
@@ -95,6 +95,7 @@ void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emission
 SpaceObject spaceObjectBuffer;
 static vector<SpaceObject> spaceObjectVector;
 static SolarSystem ss;
+Ship ship;
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 Physics *phy;
 float xxx = 5e8;
@@ -252,11 +253,13 @@ void systemDisplay(){
     	glTranslatef(-ss.getStars()[i]._x/xxx, -ss.getStars()[i]._y/xxx, -ss.getStars()[i]._z/xxx);
     }
 
+    ship.renderWindow();
     glFlush();
     glutSwapBuffers();
 }
 
 void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emissionColor[], float eMultiplier, SpaceObject spaceObject){
+    //cout << "Does this shit break here?";
 	surfaceColor[0] =spaceObject._red/2;
 	surfaceColor[1] =spaceObject._green/2;
 	surfaceColor[2] =spaceObject._blue/2;
@@ -273,6 +276,7 @@ void setColors(GLfloat surfaceColor[], GLfloat specularColor[], GLfloat emission
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
 
 	glTranslatef(spaceObject._x/xxx, spaceObject._y/xxx, spaceObject._z/xxx);
+    //cout << "nope";
 }
 
 void myIdle(void)
@@ -411,7 +415,7 @@ int main(int argc, char *argv[])
     readin();
     phy = new Physics(ss.getEntireSystem(),1);
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE);
+    glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowPosition(0,0);
     glutInitWindowSize(1280,720);
     glutCreateWindow("Gravity Simulation");

@@ -22,9 +22,9 @@ class SpaceObject {
 		double _y_speed;
 		double _z_speed;
 		double _radius;
-		int _red;
-		int _green;
-		int _blue;
+		double _red;
+		double _green;
+		double _blue;
 		std::string _type;
 
 		// default constructor
@@ -40,9 +40,9 @@ class SpaceObject {
 						double _y_speed,
 						double _z_speed,
 						double _radius,
-						int _red,
-						int _green,
-						int _blue,
+						double _red,
+						double _green,
+						double _blue,
 						std::string _type
 					);
 };

@@ -20,9 +20,9 @@ SpaceObject::SpaceObject(
 							double y_speed,
 							double z_speed,
 							double radius,
-							int red,
-							int green,
-							int blue,
+							double red,
+							double green,
+							double blue,
 							std::string type
 						)
 {

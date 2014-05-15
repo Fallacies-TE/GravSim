@@ -98,14 +98,17 @@ static SolarSystem ss;
 Ship ship;
 enum {NAME, X, Y, Z, MASS, XSPEED, YSPEED, ZSPEED, RADIUS, MYRED, MYGREEN, MYBLUE, MYTYPE};
 Physics *phy;
-float xxx = 5e8;
+float xxx = 23e8;
 static float viewX = 0.0;
 static float viewY = 0.0;
 static float viewZ = -300.0;
 static int speed = 360;
 static glm::vec3 _cameraTarget(0.0f, 0.4f, 0.0f);
 static glm::vec3 _sphereCameraPos(67.5f, -46.0f, 150.0f);
-
+// adjust these to make the planets, moons, sun sizes change.
+static double planetMultiplyer = 500;
+static double moonMultiplyer = 100;
+static double sunMultiplyer = 30;
 
 
 void readin(void)
@@ -234,14 +237,14 @@ void systemDisplay(){
     for(int i=0; i < ss.getPlanets().size(); i++){
         setColors(surfaceColor, specularColor, emissionColor, 0.03f,ss.getPlanets()[i].getSpaceObject());
 
-        glutSolidSphere(1000 * ss.getPlanets()[i].getSpaceObject()._radius/xxx, 8, 8);
+        glutSolidSphere(planetMultiplyer *  ss.getPlanets()[i].getSpaceObject()._radius/xxx, 8, 8);
         glTranslatef(-ss.getPlanets()[i].getSpaceObject()._x/xxx, -ss.getPlanets()[i].getSpaceObject()._y/xxx, -ss.getPlanets()[i].getSpaceObject()._z/xxx);
 
         if(ss.getPlanets()[i].hasMoon()){
         	for(int j = 0; j < ss.getPlanets()[i].getMoons().size(); j++){
         		setColors(surfaceColor, specularColor, emissionColor, 0.03f,ss.getPlanets()[j].getMoons()[j]);
 
-        		glutSolidSphere(500 * ss.getPlanets()[j].getMoons()[j]._radius/xxx, 8, 8);
+        		glutSolidSphere(moonMultiplyer *  ss.getPlanets()[j].getMoons()[j]._radius/xxx, 8, 8);
         		glTranslatef(-ss.getPlanets()[j].getMoons()[j]._x/xxx, -ss.getPlanets()[j].getMoons()[j]._y/xxx, -ss.getPlanets()[j].getMoons()[j]._z/xxx);
         	}
         }
@@ -249,7 +252,7 @@ void systemDisplay(){
     for(int i=0; i < ss.getStars().size(); i++){
     	setColors(surfaceColor, specularColor, emissionColor, 1.0f, ss.getStars()[i]);
 
-    	glutSolidSphere(50*ss.getStars()[i]._radius/xxx, 16, 16);
+    	glutSolidSphere(sunMultiplyer * ss.getStars()[i]._radius/xxx, 16, 16);
     	glTranslatef(-ss.getStars()[i]._x/xxx, -ss.getStars()[i]._y/xxx, -ss.getStars()[i]._z/xxx);
     }
 

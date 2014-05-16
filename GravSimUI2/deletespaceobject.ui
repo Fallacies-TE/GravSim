@@ -32,7 +32,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>90</x>
      <y>20</y>
      <width>211</width>
      <height>20</height>
@@ -71,7 +71,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Are you sure you want to delete</string>
+       <string>    Are you sure you want to delete</string>
       </property>
      </widget>
     </item>
@@ -86,36 +86,16 @@
        </font>
       </property>
       <property name="text">
-       <string>           this space object?</string>
+       <string>                   this space object?</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_16">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>101</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>you like to edit:</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>230</x>
      <y>80</y>
      <width>81</width>
      <height>23</height>
@@ -128,8 +108,8 @@
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>50</y>
+     <x>50</x>
+     <y>80</y>
      <width>161</width>
      <height>21</height>
     </rect>
@@ -138,9 +118,9 @@
   <widget class="QLabel" name="label_15">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>131</width>
+     <x>50</x>
+     <y>50</y>
+     <width>261</width>
      <height>20</height>
     </rect>
    </property>
@@ -152,7 +132,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Which object would</string>
+    <string>Which object would you like to delete:</string>
    </property>
   </widget>
  </widget>

@@ -2,7 +2,7 @@
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
-   // printf("Yo");
+
 
     QApplication a(argc, argv);
     MainWindow w;

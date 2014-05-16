@@ -6,10 +6,6 @@
 #include <QLineEdit>
 #include <QDoubleSpinBox>
 #include <QComboBox>
-//#include <QtWidgets/QTableWidget>
-//#include <QtWidgets/QLineEdit>
-//#include <QtWidgets/QDoubleSpinBox>
-//#include <QtWidgets/QComboBox>
 
 namespace Ui {
 class EditSpaceObject;
@@ -23,22 +19,46 @@ public:
     explicit EditSpaceObject(QWidget *parent = 0);
     ~EditSpaceObject();
     QString name();
-    double xpos();
-    double ypos();
-    double zpos();
-    double mass();
-    double xspeed();
-    double yspeed();
-    double zspeed();
-    double radius();
-    double red();
-    double blue();
-    double green();
+    QString xpos();
+    QString ypos();
+    QString zpos();
+    QString mass();
+    QString xspeed();
+    QString yspeed();
+    QString zspeed();
+    QString radius();
+    QString red();
+    QString blue();
+    QString green();
     QString type();
     void setData(QTableWidget *table);
     int getSelectedRow();
+    bool is_number(std::string s);
+    QString EditNumberIfNeeded(std::string s, QString s2);
 
 private slots:
+    void on_lineEdit_2_textChanged(const QString &arg1);
+
+    void on_lineEdit_3_textChanged(const QString &arg1);
+
+
+    void on_lineEdit_4_textChanged(const QString &arg1);
+
+    void on_lineEdit_5_textChanged(const QString &arg1);
+
+    void on_lineEdit_6_textChanged(const QString &arg1);
+
+    void on_lineEdit_7_textChanged(const QString &arg1);
+
+    void on_lineEdit_8_textChanged(const QString &arg1);
+
+    void on_lineEdit_9_textChanged(const QString &arg1);
+
+    void on_lineEdit_10_textChanged(const QString &arg1);
+
+    void on_lineEdit_11_textChanged(const QString &arg1);
+
+    void on_lineEdit_12_textChanged(const QString &arg1);
 
     void on_pushButton_clicked();
 

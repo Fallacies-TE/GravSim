@@ -54,22 +54,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>250</y>
-     <width>121</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="decimals">
-    <number>3</number>
-   </property>
-   <property name="maximum">
-    <double>999999999.998999953269958</double>
-   </property>
-  </widget>
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
@@ -81,7 +65,7 @@
    </property>
    <item>
     <property name="text">
-     <string>Sun</string>
+     <string>Star</string>
     </property>
    </item>
    <item>
@@ -108,7 +92,7 @@
     <string>Object's Name</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -134,7 +118,7 @@
     <string>Y position</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -160,7 +144,7 @@
     <string>Mass</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -186,7 +170,7 @@
     <string>Y speed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
+  <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -199,7 +183,7 @@
     <string>X speed</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_9">
+  <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -212,7 +196,7 @@
     <string>Blue</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
+  <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -225,7 +209,7 @@
     <string>Green</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_11">
+  <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -238,7 +222,7 @@
     <string>Red</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_12">
+  <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -251,7 +235,7 @@
     <string>Object's Type</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_13">
+  <widget class="QLabel" name="label_o">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -283,34 +267,13 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_6"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_7"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_8"/>
     </item>
    </layout>
   </widget>
@@ -325,34 +288,13 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_2"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_3"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_4"/>
     </item>
    </layout>
   </widget>
@@ -367,38 +309,17 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_8">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_10"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_9">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_11"/>
     </item>
     <item>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_10">
-      <property name="decimals">
-       <number>3</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.998999953269958</double>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_12"/>
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_14">
+  <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -411,20 +332,24 @@
     <string>Radius</string>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox_11">
+  <widget class="QLineEdit" name="lineEdit_5">
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>60</y>
+     <x>140</x>
+     <y>250</y>
      <width>121</width>
-     <height>31</height>
+     <height>20</height>
     </rect>
    </property>
-   <property name="decimals">
-    <number>3</number>
-   </property>
-   <property name="maximum">
-    <double>999999999.998999953269958</double>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_9">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>60</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
    </property>
   </widget>
  </widget>

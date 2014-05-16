@@ -16,15 +16,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     addspaceobject.cpp \
     editspaceobject.cpp \
-    deletespaceobject.cpp
+    deletespaceobject.cpp \
+    incorrectformat.cpp
 
 HEADERS  += mainwindow.h \
     addspaceobject.h \
     editspaceobject.h \
-    deletespaceobject.h
+    deletespaceobject.h \
+    incorrectformat.h
 
 FORMS    += mainwindow.ui \
     addspaceobject.ui \
     editspaceobject.ui \
-    deletespaceobject.ui
+    deletespaceobject.ui \
+    incorrectformat.ui
 

@@ -1,7 +1,12 @@
 #include "editspaceobject.h"
 #include "ui_editspaceobject.h"
+#include "incorrectformat.h"
+
 #include <iostream>
 #include <vector>
+#include <string>
+#include <cstring>
+#include <stdlib.h>
 
 EditSpaceObject::EditSpaceObject(QWidget *parent) :
     QDialog(parent),
@@ -10,10 +15,10 @@ EditSpaceObject::EditSpaceObject(QWidget *parent) :
     ui->setupUi(this);
 }
 
-//QTableWidget *tableFromMain;
-int selectedRow;
+int selectedRow, selectedIndex;
 std::vector< std::vector<QString> > tableData;
 QString typeHolder;
+QString textholder;
 
 EditSpaceObject::~EditSpaceObject()
 {
@@ -25,13 +30,14 @@ void EditSpaceObject::setData(QTableWidget *table){
     int numRows = table->rowCount();
     QStringList objects;
     std::string temp;
+    QString temp2;
 
     for(int i=0; i<numRows; ++i){
         temp = ((table->item(i, 0))->text()).toStdString();
-        std::cout << i ;
-        std::cout << ": " ;
-        std::cout << temp ;
-        std::cout << std::endl ;
+        //std::cout << i ;
+        //std::cout << ": " ;
+        //std::cout << temp ;
+        //std::cout << std::endl ;
         objects << ((table->item(i, 0))->text());
     }
 
@@ -41,7 +47,9 @@ void EditSpaceObject::setData(QTableWidget *table){
 
     for(int j=0; j<numRows; ++j){
         for(int col=0; col<13; ++col){
-            tableHolder[j][col] = (table->item(j, col))->text();
+            temp2 = ((table->item(j, col))->text());
+            tableHolder[j][col] = temp2;
+            //std::cout << j << "," << col << ": " << (tableHolder[j][col]).toStdString() << std::endl ;
         }
     }
 
@@ -59,26 +67,66 @@ void EditSpaceObject::on_pushButton_clicked()
     selectedRow = (ui->comboBox_2->currentIndex());
     std::cout << "selected: " << selectedRow << std::endl;
 
-    std::vector<QString> temp = tableData[selectedRow];
+    ui->lineEdit->insert(tableData[selectedRow][0]);
+    ui->lineEdit_2->insert(tableData[selectedRow][1]);
+    ui->lineEdit_3->insert(tableData[selectedRow][2]);
+    ui->lineEdit_4->insert(tableData[selectedRow][3]);
+    ui->lineEdit_5->insert(tableData[selectedRow][4]);
+    ui->lineEdit_6->insert(tableData[selectedRow][5]);
+    ui->lineEdit_7->insert(tableData[selectedRow][6]);
+    ui->lineEdit_8->insert(tableData[selectedRow][7]);
+    ui->lineEdit_9->insert(tableData[selectedRow][8]);
+    ui->lineEdit_10->insert(tableData[selectedRow][9]);
+    ui->lineEdit_11->insert(tableData[selectedRow][10]);
+    ui->lineEdit_12->insert(tableData[selectedRow][11]);
 
-    ui->lineEdit->insert(temp[0]);
-    ui->doubleSpinBox->valueFromText(temp[1]);
-    ui->doubleSpinBox_2->valueFromText(temp[2]);
-    ui->doubleSpinBox_3->valueFromText(temp[3]);
-    ui->doubleSpinBox_4->valueFromText(temp[4]);
-    ui->doubleSpinBox_5->valueFromText(temp[5]);
-    ui->doubleSpinBox_6->valueFromText(temp[6]);
-    ui->doubleSpinBox_7->valueFromText(temp[7]);
-    ui->doubleSpinBox_8->valueFromText(temp[8]);
-    ui->doubleSpinBox_9->valueFromText(temp[9]);
-    ui->doubleSpinBox_10->valueFromText(temp[10]);
-    ui->doubleSpinBox_11->valueFromText(temp[11]);
+    typeHolder = tableData[selectedRow][12];
 
-    typeHolder = temp[12];
+    if(strcmp(typeHolder.toStdString().c_str(), "Star") == 0){
+        selectedIndex = 0;
+    } else if(strcmp(typeHolder.toStdString().c_str(), "Planet") == 0) {
+        selectedIndex = 1;
+    } else if(strcmp(typeHolder.toStdString().c_str(), "Satellite") == 0) {
+        selectedIndex = 2;
+    }
 
-    //if(typeHolder.)
+    ui->comboBox->setCurrentIndex(selectedIndex);
+}
 
-   // ui->comboBox->setCurrentIndex(temp[12]);
+// if e at end of number add 0 at end to make it e0
+// if . at end of number add 0 at end to make it .0
+// if not e or . in number add .0 at end
+QString EditSpaceObject::EditNumberIfNeeded(std::string s, QString s2)
+{
+    bool DotAtEnd = false;
+    bool ContainsDot = false;
+    bool EAtEnd = false;
+    bool ContainsE = false;
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && (std::isdigit(*it) || (*it == 'e') || (*it == '.') )){
+        if(*it == 'e'){
+            EAtEnd = true;
+            DotAtEnd = false;
+            ContainsE = true;
+        } else if(*it == '.') {
+            EAtEnd = false;
+            DotAtEnd = true;
+            ContainsDot = true;
+        } else {
+            EAtEnd = false;
+            DotAtEnd = false;
+        }
+
+        ++it;
+    }
+
+    if(!EAtEnd && !DotAtEnd && !ContainsE && !ContainsDot){
+        s2.append(".0");
+    } else if(EAtEnd || DotAtEnd) {
+        s2.append("0");
+    }
+
+    return s2;
 }
 
 
@@ -86,50 +134,280 @@ QString EditSpaceObject::name(){
     return ui->lineEdit->text();
 }
 
-double EditSpaceObject::xpos(){
-    return ui->doubleSpinBox->value();
+QString EditSpaceObject::xpos(){
+    textholder = ui->lineEdit_2->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::ypos(){
-    return ui->doubleSpinBox_2->value();
+QString EditSpaceObject::ypos(){
+    textholder = ui->lineEdit_3->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::zpos(){
-    return ui->doubleSpinBox_3->value();
+QString EditSpaceObject::zpos(){
+    textholder = ui->lineEdit_4->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::mass(){
-    return ui->doubleSpinBox_4->value();
+QString EditSpaceObject::mass(){
+    textholder = ui->lineEdit_5->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::xspeed(){
-    return ui->doubleSpinBox_5->value();
+QString EditSpaceObject::xspeed(){
+    textholder = ui->lineEdit_6->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::yspeed(){
-    return ui->doubleSpinBox_6->value();
+QString EditSpaceObject::yspeed(){
+    textholder = ui->lineEdit_7->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::zspeed(){
-    return ui->doubleSpinBox_7->value();
+QString EditSpaceObject::zspeed(){
+    textholder = ui->lineEdit_8->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::red(){
-    return ui->doubleSpinBox_8->value();
+QString EditSpaceObject::radius(){
+    textholder = ui->lineEdit_9->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::blue(){
-    return ui->doubleSpinBox_9->value();
+QString EditSpaceObject::red(){
+    textholder = ui->lineEdit_10->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::green(){
-    return ui->doubleSpinBox_10->value();
+QString EditSpaceObject::blue(){
+    textholder = ui->lineEdit_11->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
-double EditSpaceObject::radius(){
-    return ui->doubleSpinBox_11->value();
+QString EditSpaceObject::green(){
+    textholder = ui->lineEdit_12->text();
+
+    if(textholder == ""){
+        textholder = "0.0";
+    }
+    return this->EditNumberIfNeeded(textholder.toStdString(), textholder);
 }
 
 QString EditSpaceObject::type(){
     return ui->comboBox->currentText();
+}
+
+bool EditSpaceObject::is_number(std::string s)
+{
+    if(s == "")
+        return true;
+
+    bool detectedE = false;
+    bool detectedDot = false;
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && (std::isdigit(*it) || (*it == 'e') || (*it == '.') )){
+        if(*it == 'e'){
+            if(!detectedE){
+                detectedE = true;
+            } else if (detectedE) {
+                return false;
+            }
+        } else if(*it == '.') {
+            if(!detectedDot){
+                detectedDot = true;
+            } else if (detectedDot) {
+                return false;
+            } else if (detectedE){
+                return false;
+            }
+        }
+
+        ++it;
+    }
+
+    return !s.empty() && it == s.end();
+}
+
+void EditSpaceObject::on_lineEdit_2_textChanged(const QString &arg1) {
+    //std::string changedText = arg1.toStdString();
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_2->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_2->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_3_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_3->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_3->text());
+        numDialog.exec();
+    }
+}
+
+
+void EditSpaceObject::on_lineEdit_4_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_4->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_4->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_5_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_5->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_5->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_6_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_6->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_6->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_7_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_7->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_7->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_8_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_8->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_8->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_9_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_9->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_9->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_10_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_10->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_10->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_11_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_11->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_11->text());
+        numDialog.exec();
+    }
+}
+
+void EditSpaceObject::on_lineEdit_12_textChanged(const QString &arg1)
+{
+    std::string holder = (arg1.toStdString());
+    if( !this->is_number( holder ) ){
+        std::cout << "string changed to : " << holder << std::endl;
+        ui->lineEdit_12->clear();
+        IncorrectFormat numDialog;
+        numDialog.setModal(true);
+        numDialog.setText(ui->label_12->text());
+        numDialog.exec();
+    }
 }
